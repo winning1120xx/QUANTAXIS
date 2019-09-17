@@ -2,17 +2,18 @@
 <!-- TOC -->
 
 - [QUANTAXIS 的安装 WIN篇](#quantaxis-的安装-win篇)
-    - [部署问题:](#部署问题)
-    - [下载PYTHON(可以跳过)](#下载python可以跳过)
-    - [安装(可以跳过)](#安装可以跳过)
-    - [下载git](#下载git)
-    - [使用git下载QUANTAXIS](#使用git下载quantaxis)
-    - [安装QUANTAXIS的依赖项](#安装quantaxis的依赖项)
-    - [下载安装数据库](#下载安装数据库)
-    - [安装QUANTAXIS的web插件](#安装quantaxis的web插件)
+    - [1. 部署问题:](#1-部署问题)
+    - [2. 下载PYTHON(可以跳过)](#2-下载python可以跳过)
+    - [3. 安装(可以跳过)](#3-安装可以跳过)
+    - [4. 下载git[新手/以及不想自己改代码的注意 此段跳过]](#4-下载git新手以及不想自己改代码的注意-此段跳过)
+    - [5. 使用git下载QUANTAXIS [新手/以及不想自己改代码的注意 此段跳过]](#5-使用git下载quantaxis-新手以及不想自己改代码的注意-此段跳过)
+    - [6. 安装QUANTAXIS的依赖项 [新手/以及不想自己改代码的注意 此段跳过]](#6-安装quantaxis的依赖项-新手以及不想自己改代码的注意-此段跳过)
+    - [7. 直接安装quantaxis [仅供新手/直接安装 使用]](#7-直接安装quantaxis-仅供新手直接安装-使用)
+    - [8. 下载安装数据库](#8-下载安装数据库)
+    - [9. 安装完成后 参见部署](#9-安装完成后-参见部署)
 
 <!-- /TOC -->
-## 部署问题:
+##  1. 部署问题:
 
 - Windows/Linux(ubuntu) 已测试通过
 - python3.6(开发环境) python2 回测框架不兼容(attention! 之后会逐步用更多高级语法)   [*] 如果需要交易,请下载32位的python3.6
@@ -26,7 +27,7 @@
 
 
 
-## 下载PYTHON(可以跳过)
+##  2. 下载PYTHON(可以跳过)
 
 QUANATXIS 支持的安装环境是python3以上 优先推荐3.6环境
 
@@ -36,7 +37,14 @@ QUANATXIS 支持的安装环境是python3以上 优先推荐3.6环境
 
 [清华镜像ANACONDA链接](https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/)
 
-## 安装(可以跳过)
+
+anaconda安装的时候 注意:
+
+敲黑板! 一定都要选上, 不然需要自己手动配置path, 如果不是很了解path的童靴一定要都选上
+
+![](http://pic.yutiansut.com/anaconda_install_win.png)
+
+##  3. 安装(可以跳过)
 
 在安装ANACONDA的过程中,注意勾选```add to path```选项,将python的执行路径加入系统路径中
 
@@ -47,15 +55,21 @@ QUANATXIS 支持的安装环境是python3以上 优先推荐3.6环境
 Python 3.6.3 :: Anaconda, Inc.
 ```
 
-## 下载git
+##  4. 下载git[新手/以及不想自己改代码的注意 此段跳过]
 
 QUANTAXIS的代码托管在github,你需要经常用过```git pull```来更新代码,所以请勿直接在网站上下载zip压缩包
 
-[git 下载地址](http://rj.baidu.com/soft/detail/40642.html)
+[git 下载地址](https://pc.qq.com/search.html#!keyword=git)
 
 同样,在安装的时候 选择```add to path```
 
-## 使用git下载QUANTAXIS
+![](http://pic.yutiansut.com/git1.png)
+![](http://pic.yutiansut.com/git2.png)
+![](http://pic.yutiansut.com/git3.png)
+![](http://pic.yutiansut.com/git4.png)
+![](http://pic.yutiansut.com/git5.png)
+
+##  5. 使用git下载QUANTAXIS [新手/以及不想自己改代码的注意 此段跳过]
 
 打开命令行(推荐使用powershell) 选择你想要的目录 下载quantaxis
 
@@ -67,32 +81,69 @@ cd C:\
 git clone https://github.com/yutiansut/quantaxis --depth 1 
 ```
 
-## 安装QUANTAXIS的依赖项
+##  6. 安装QUANTAXIS的依赖项 [新手/以及不想自己改代码的注意 此段跳过]
 
 ```
 cd C:\quantaxis
 
 python -m pip install -r requirements.txt -i https://pypi.doubanio.com/simple
-python -m pip install git+https://github.com/yutiansut/tushare
-python -m pip install -e . -i https://pypi.doubanio.com/simple
-
-
+python -m pip install tushare
+python -m pip install pytdx
+python -m pip install -e . 
 ```
 
 完成以后 在命令行输入 ```quantaxis```即可进入QUANTAXIS的cli界面
 
 ```
 λ  quantaxis
-QUANTAXIS>> start QUANTAXIS
-QUANTAXIS>> Selecting the Best Server IP of TDX
-QUANTAXIS>> === The BEST SERVER ===
- stock_ip 115.238.90.165 future_ip 61.152.107.141
-QUANTAXIS>> Welcome to QUANTAXIS, the Version is remake-version
 QUANTAXIS>
 ```
 
 
-## 下载安装数据库
+## 7. 直接安装quantaxis [仅供新手/直接安装 使用]
+
+
+```
+pip install quantaxis
+```
+
+
+安装时可能会遇到几个问题:
+
+
+1. twisted, lxml 等需要编译:  出现VC14 required等字样:
+
+
+    ```
+    解决方法:
+
+    单独去https://www.lfd.uci.edu/~gohlke/pythonlibs/ 找到你所缺少的包, 下载到本地 pip install 安装
+
+    ```
+
+2. pip no 'main' 问题:
+
+
+    ```
+    解决方法:
+
+    pip10 的不兼容升级, 使用pip install pip==9.0.1 降级后安装
+    ```
+
+3. 缺少包 例如 jupyter-echarts-installer
+
+    ```
+    解决方法:
+
+    单独安装 pip install xxxx
+    ```
+
+
+
+
+
+
+##  8. 下载安装数据库
 
 QUANTAXIS使用MONGODB数据库作为数据存储,需要下载数据库
 
@@ -127,34 +178,7 @@ cd C:\Program Files\MongoDB\Server\3.4\bin
 net start MongoDB
 ```
 
-## 安装QUANTAXIS的web插件
 
-QUANTAXIS使用了nodejs写了web部分的插件,所以需要下载nodejs
+##  9. 安装完成后 参见部署
 
-nodejs下载地址 [](https://nodejs.org/zh-cn/download/current/)
-
-注意: 需要下载的是nodejs8的版本,切勿下载9版本的nodejs
-
-安装时也需要```add to path ```
-
-安装完成后,在命令行输入```node -v```来查看是否安装成功
-
-```
-λ  node -v
-v8.9.3
-```
-
-
-```
-npm install cnpm -g
-cnpm install forever -g
-
-cd C:\quantaxis\QUANTAXIS_WEBKIT\backend
-cnpm install
-
-cd C:\quantaxis\QUANTAXIS_WEBKIT\web
-cnpm install
-
-```
-
-
+[部署](install.md#%E5%90%AF%E5%8A%A8quantaxis-cli-%E5%B9%B6%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AD%98%E5%82%A8)

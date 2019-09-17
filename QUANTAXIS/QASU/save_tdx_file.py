@@ -2,7 +2,7 @@
 #
 # The MIT License (MIT)
 #
-# Copyright (c) 2016-2018 yutiansut/QUANTAXIS
+# Copyright (c) 2016-2019 yutiansut/QUANTAXIS
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,15 @@ from QUANTAXIS.QAUtil import (DATABASE, QA_util_date_stamp, QA_util_log_info,
 
 
 def QA_save_tdx_to_mongo(file_dir, client=DATABASE):
+    """save file
+    
+    Arguments:
+        file_dir {str:direction} -- 文件的地址
+    
+    Keyword Arguments:
+        client {Mongodb:Connection} -- Mongo Connection (default: {DATABASE})
+    """
+
     reader = TdxMinBarReader()
     __coll = client.stock_min_five
     for a, v, files in os.walk(file_dir):

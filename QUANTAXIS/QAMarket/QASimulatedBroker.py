@@ -2,7 +2,7 @@
 #
 # The MIT License (MIT)
 #
-# Copyright (c) 2016-2018 yutiansut/QUANTAXIS
+# Copyright (c) 2016-2019 yutiansut/QUANTAXIS
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,43 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from QUANTAXIS.QAMarket.QABroker import QA_Broker
 from QUANTAXIS.QAFetch.QATdx import (QA_fetch_get_future_day,
                                      QA_fetch_get_future_min,
                                      QA_fetch_get_index_day,
                                      QA_fetch_get_index_min,
                                      QA_fetch_get_stock_day,
                                      QA_fetch_get_stock_min)
+from QUANTAXIS.QAMarket.QABroker import QA_Broker
 from QUANTAXIS.QAMarket.QADealer import QA_Dealer
+from QUANTAXIS.QAUtil.QALogs import QA_util_log_info
+from QUANTAXIS.QAUtil.QAParameter import FREQUENCE, MARKET_TYPE
+
 
 class QA_SimulatedBroker(QA_Broker):
     def __init__(self, *args, **kwargs):
-        self.dealer=QA_Dealer()
+        self.dealer = QA_Dealer()
+        self.fetcher = {(MARKET_TYPE.STOCK_CN, FREQUENCE.DAY): QA_fetch_get_stock_day, (MARKET_TYPE.STOCK_CN, FREQUENCE.FIFTEEN_MIN): QA_fetch_get_stock_min,
+                        (MARKET_TYPE.STOCK_CN, FREQUENCE.ONE_MIN): QA_fetch_get_stock_min, (MARKET_TYPE.STOCK_CN, FREQUENCE.FIVE_MIN): QA_fetch_get_stock_min,
+                        (MARKET_TYPE.STOCK_CN, FREQUENCE.THIRTY_MIN): QA_fetch_get_stock_min, (MARKET_TYPE.STOCK_CN, FREQUENCE.SIXTY_MIN): QA_fetch_get_stock_min,
+                        (MARKET_TYPE.INDEX_CN, FREQUENCE.DAY): QA_fetch_get_index_day, (MARKET_TYPE.INDEX_CN, FREQUENCE.FIFTEEN_MIN): QA_fetch_get_index_min,
+                        (MARKET_TYPE.INDEX_CN, FREQUENCE.ONE_MIN): QA_fetch_get_index_min, (MARKET_TYPE.INDEX_CN, FREQUENCE.FIVE_MIN): QA_fetch_get_index_min,
+                        (MARKET_TYPE.INDEX_CN, FREQUENCE.THIRTY_MIN): QA_fetch_get_index_min, (MARKET_TYPE.INDEX_CN, FREQUENCE.SIXTY_MIN): QA_fetch_get_index_min,
+                        (MARKET_TYPE.FUND_CN, FREQUENCE.DAY): QA_fetch_get_index_day, (MARKET_TYPE.FUND_CN, FREQUENCE.FIFTEEN_MIN): QA_fetch_get_index_min,
+                        (MARKET_TYPE.FUND_CN, FREQUENCE.ONE_MIN): QA_fetch_get_index_min, (MARKET_TYPE.FUND_CN, FREQUENCE.FIVE_MIN): QA_fetch_get_index_min,
+                        (MARKET_TYPE.FUND_CN, FREQUENCE.THIRTY_MIN): QA_fetch_get_index_min, (MARKET_TYPE.FUND_CN, FREQUENCE.SIXTY_MIN): QA_fetch_get_index_min}
 
     def get_market(self, order):
-        pass
-
-    def warp(self, order):
-        pass
+        try:
+            data = self.fetcher[(order.market_type, order.frequence)](
+                code=order.code, start=order.datetime, end=order.datetime).values[0]
+            if 'vol' in data.keys() and 'volume' not in data.keys():
+                data['volume'] = data['vol']
+            elif 'vol' not in data.keys() and 'volume' in data.keys():
+                data['vol'] = data['volume']
+            return data
+        except Exception as e:
+            QA_util_log_info('MARKET_ENGING ERROR: {}'.format(e))
+            return None
 
     def receive_order(self, event):
         order = event.order
@@ -53,4 +72,13 @@ class QA_SimulatedBroker(QA_Broker):
         order = self.warp(order)
 
         return self.dealer.deal(order, self.market_data)
-    
+
+    def query_data(self, code, start, end, frequence, market_type=None):
+        """
+        标准格式是numpy
+        """
+        try:
+            return self.fetcher[(market_type, frequence)](
+                code, start, end, frequence=frequence)
+        except:
+            pass

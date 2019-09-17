@@ -1,18 +1,20 @@
 # 账户/组合/策略的说明 QAARP模块
 
 
-<!-- TOC -->
+<!-- vscode-markdown-toc -->
+* 1. [账户/组合/策略的关系](#)
+* 2. [创建自定义的策略](#-1)
 
-- [账户/组合/策略的说明 QAARP模块](#账户组合策略的说明-qaarp模块)
-    - [账户/组合/策略的关系](#账户组合策略的关系)
-    - [创建自定义的策略](#创建自定义的策略)
-
-<!-- /TOC -->
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
 @yutiansut
 2018/1/26
 在1.0版本以后,回测的策略是以继承账户类来进行的
 
-## 账户/组合/策略的关系
+##  1. <a name=''></a>账户/组合/策略的关系
 
 {
   UserA:{
@@ -96,7 +98,7 @@ Out[]:
 ```
 
 
-## 创建自定义的策略
+##  2. <a name='-1'></a>创建自定义的策略
 
 
 ```python
@@ -118,7 +120,7 @@ class MAStrategy(QA_Strategy):
             for item in event.market_data.code:
                 if sellavailable is None:
 
-                    event.send_order(account_id=self.account_cookie,
+                    event.send_order(account_cookie=self.account_cookie,
                                      amount=100, amount_model=AMOUNT_MODEL.BY_AMOUNT,
                                      time=self.current_time, code=item, price=0,
                                      order_model=ORDER_MODEL.MARKET, towards=ORDER_DIRECTION.BUY,
@@ -127,7 +129,7 @@ class MAStrategy(QA_Strategy):
 
                 else:
                     if sellavailable.get(item, 0) > 0:
-                        event.send_order(account_id=self.account_cookie,
+                        event.send_order(account_cookie=self.account_cookie,
                                          amount=sellavailable[item], amount_model=AMOUNT_MODEL.BY_AMOUNT,
                                          time=self.current_time, code=item, price=0,
                                          order_model=ORDER_MODEL.MARKET, towards=ORDER_DIRECTION.SELL,
@@ -135,7 +137,7 @@ class MAStrategy(QA_Strategy):
                                          broker_name=self.broker
                                          )
                     else:
-                        event.send_order(account_id=self.account_cookie,
+                        event.send_order(account_cookie=self.account_cookie,
                                          amount=100, amount_model=AMOUNT_MODEL.BY_AMOUNT,
                                          time=self.current_time, code=item, price=0,
                                          order_model=ORDER_MODEL.MARKET, towards=ORDER_DIRECTION.BUY,
